@@ -198,6 +198,33 @@ module mor1kx_cpu
    wire [OPTION_OPERAND_WIDTH-1:0]   monitor_spr_esr/* verilator public */;
    wire 			     monitor_branch_mispredict/* verilator public */;
 
+	// synthesis translate_off
+`ifndef SYNTHESIS
+   /* Provide interface hooks for register functions. */
+
+   function [OPTION_OPERAND_WIDTH-1:0] get_gpr;
+      // verilator public
+      input [15:0] gpr_num;
+      if (OPTION_CPU=="CAPPUCCINO")
+         get_gpr = cappuccino.mor1kx_cpu.get_gpr(gpr_num);
+      else if (OPTION_CPU=="ESPRESSO")
+         get_gpr = espresso.mor1kx_cpu.get_gpr(gpr_num);
+      else if (OPTION_CPU=="PRONTO_ESPRESSO")
+         get_gpr = prontoespresso.mor1kx_cpu.get_gpr(gpr_num);
+   endfunction
+
+   task set_gpr;
+      // verilator public
+      input [15:0] gpr_num;
+      input [OPTION_OPERAND_WIDTH-1:0] gpr_value;
+      if (OPTION_CPU=="CAPPUCCINO")
+         cappuccino.mor1kx_cpu.set_gpr(gpr_num, gpr_value);
+      else if (OPTION_CPU=="ESPRESSO")
+         espresso.mor1kx_cpu.set_gpr(gpr_num, gpr_value);
+      else if (OPTION_CPU=="PRONTO_ESPRESSO")
+         prontoespresso.mor1kx_cpu.set_gpr(gpr_num, gpr_value);
+   endtask
+`endif
 
    generate
       /* verilator lint_off WIDTH */
@@ -357,6 +384,7 @@ module mor1kx_cpu
             monitor_execute_insn_reg <= cappuccino.mor1kx_cpu.mor1kx_decode.decode_insn_i;
 
         assign monitor_execute_insn = monitor_execute_insn_reg;
+
 
 `endif
 	 // synthesis translate_on
