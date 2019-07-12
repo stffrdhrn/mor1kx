@@ -65,6 +65,8 @@ filesets:
     files : [bench/verilog/mor1kx_monitor.v]
     file_type : verilogSource
 
+  tinyfpga_bx: {files: [data/tinyfpga_bx.pcf : {file_type : PCF}]}
+
 parameters:
   trace_enable:
     datatype    : bool
@@ -75,8 +77,6 @@ parameters:
     datatype    : bool
     description : Output mor1kx instruction trace to screen
     paramtype   : plusarg
-
-icebreaker : {files: [data/icebreaker.pcf  : {file_type : PCF}]}
 
 targets:
   default:
@@ -89,14 +89,12 @@ targets:
       - "tool_rivierapro? (monitor)"
       - "tool_xsim? (monitor)"
     parameters: [trace_enable, trace_to_screen]
-  
-  icebreaker:
+
+  tinyfpga_bx:
     default_tool : icestorm
-    filesets : [core, fpu, icebreaker]
-    generate: [icebreaker_pll]
-    parameters : [PLL=ICE40_PAD]
+    filesets : [core, fpu, monitor, tinyfpga_bx]
     tools:
       icestorm:
-        nextpnr_options: [--up5k, --freq, 16]
+        nextpnr_options : [--lp8k, --package, cm81, --freq, 32]
         pnr: next
-    toplevel : service
+    toplevel : core
