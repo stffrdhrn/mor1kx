@@ -92,9 +92,9 @@ targets:
 
   tinyfpga_bx:
     default_tool : icestorm
-    filesets : [core, fpu, monitor, tinyfpga_bx]
+    filesets : [core, tinyfpga_bx]
     tools:
       icestorm:
-        nextpnr_options : [--lp8k, --package, cm81, --freq, 32]
+        nextpnr_options : [--lp8k, --pcf-allow-unconstrained, --package, cm81, --freq, 32]
         pnr: next
-    toplevel : core
+    toplevel : mor1kx
