@@ -9,6 +9,8 @@ smtbmc yices
 [script]
 
 read -formal mor1kx_simple_dpram_sclk.v
+chparam -set ENABLE_BYPASS 1 mor1kx_simple_dpram_sclk
+chparam -set CLEAR_ON_INIT 1 mor1kx_simple_dpram_sclk
 prep -top mor1kx_simple_dpram_sclk
 
 [files]

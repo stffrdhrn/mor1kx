@@ -70,7 +70,7 @@ endgenerate
    end
 
 /*-----Formal checking------*/
- 
+
 `ifdef FORMAL
 
    reg t_past_ctrl;
@@ -85,7 +85,7 @@ endgenerate
         assert (dout == $past(din));
 
       if ($past(we) & t_past_ctrl & !ENABLE_BYPASS)
-        assert (mem[waddr] == $past(din));
+        assert (mem[$past(waddr)] == $past(din));
 
       if ($past(re) & t_past_ctrl & !ENABLE_BYPASS)
         assert (dout == $past(mem[raddr]));

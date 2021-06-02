@@ -12,7 +12,8 @@
 ##########################################################$
 
 TESTS := mor1kx_cache_lru \
-	mor1kx_simple_dpram_sclk \
+	mor1kx_simple_dpram_sclk-enable_bypass \
+	mor1kx_simple_dpram_sclk-disable_bypass \
 	mor1kx_true_dpram_sclk \
 	mor1kx_icache
 
@@ -24,5 +25,5 @@ clean:
 
 RTL := ../../rtl/verilog
 
-$(TESTS): % : $(RTL)/%.v
+$(TESTS): % :
 	sby -f $@.sby
