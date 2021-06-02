@@ -277,27 +277,20 @@ module mor1kx_cache_lru(/*AUTOARG*/
       // lru_post = 4'b0010 is what we expected.
    end
 
-/*Formal Checking*/
+/*-----Formal Checking-------*/
 
 `ifdef FORMAL
 
-   always @(*) begin	
-      //Asserting Number of ways is always greater than 1.
+   always @(*) begin
       assert (NUMWAYS > 1);
-
-      //Assuming input stimulus of design is one hot encoded.
-      assume ($onehot(access));
-
-      //Verifying if outputs lru_post or lru_pre are of one hot encoded.
+      assume ($onehot0(access));
       assert ($onehot(lru_pre));
       assert ($onehot(lru_post));
-
-      //To make sure all vectors of expand array are of fixed length.
       for (i = 0; i < NUMWAYS; i = i + 1) begin
-         assert ($size(expand[i]) == NUMWAYS ); 
+         assert ($size(expand[i]) == NUMWAYS );
       end
    end
 
-`endif   
+`endif
 
 endmodule // mor1kx_dcache_lru

@@ -57,30 +57,34 @@ module mor1kx_true_dpram_sclk
       end
    end
 
-/*Formal Checking*/
+/*------Formal Checking-------*/
 
-`ifdef Formal
+`ifdef FORMAL
 
-   // Checking synchronous read and write operation at port A wrt clock_a 
-   always @(posedge clk_a) begin
-      if (we_a)
-	 assert ((din_a == mem[addr_a]) && (dout_a == din_a));
-      else begin
-         assume (mem[addr_a] == 32'hc032);
-         //Assume some data at addr_a, check if same data is put on data port during read operation
-         assert (dout_a == 32'hc032);
-      end
+   reg t_past_ctrl;
+   initial t_past_ctrl = 1'b0;
+   (* gclk *) reg global_clock;
+
+   always @(posedge global_clock) begin
+      t_past_ctrl = 1'b1;
+      assume (addr_a != addr_b);
    end
 
-   //Checking synchronous read and write operation at port B wrt clock_b
-   always @(posedge clk_b) begin
-     if (we_b)
-        assert ((din_b == mem[addr_b]) && (dout_b == din_b))); 
-     else begin
-        assume (mem[addr_b] == 32'hbb20);
-        //Assume some data at addr_b, check if same data is put on data port during read operation
-        assert (dout_b == 32'hbb20);
-     end
+   always @(posedge global_clock) begin
+
+      if ($rose(clk_a)) begin
+         if ($past(we_a) & t_past_ctrl)
+            assert (dout_a == $past(din_a));
+         if ($past(!we_a) & t_past_ctrl)
+            assert ($past(mem[addr_a]) == dout_a);
+      end
+
+      if ($rose(clk_b)) begin
+         if ($past(we_b) & t_past_ctrl)
+            assert (dout_b == $past(din_b));
+         if ($past(!we_b) & t_past_ctrl)
+            assert ($past(mem[addr_b]) == dout_b);
+      end
    end
 
 `endif
