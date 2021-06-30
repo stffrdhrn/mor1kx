@@ -187,9 +187,9 @@ endgenerate
    assign pagefault_o = (supervisor_mode_i ? !sxe : !uxe) &
 			!tlb_reload_busy_o & !busy_o;
 
-   assign busy_o = ((itlb_match_spr_cs | itlb_trans_spr_cs) & !spr_bus_ack |
-		    (itlb_match_spr_cs_r | itlb_trans_spr_cs_r) &
-		    spr_bus_ack & !spr_bus_ack_r) & enable_i;
+   assign busy_o = enable_i & (itlb_match_spr_cs | itlb_match_spr_cs_r |
+			       itlb_trans_spr_cs | itlb_trans_spr_cs_r) &
+			      (!spr_bus_ack_r);
 
    assign spr_way_idx_full = {spr_bus_addr_i[10], spr_bus_addr_i[8]};
    assign spr_way_idx = spr_way_idx_full[WAYS_WIDTH-1:0];
